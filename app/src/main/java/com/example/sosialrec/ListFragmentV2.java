@@ -112,6 +112,7 @@ public class ListFragmentV2 extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
+
         DividerItemDecoration itemDecoration = new
                 DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         itemDecoration.setDrawable(getResources().getDrawable(R.drawable.separator,

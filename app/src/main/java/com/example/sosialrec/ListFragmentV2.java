@@ -104,7 +104,6 @@ public class ListFragmentV2 extends Fragment {
     }
 
     private void initRecyclerView() {
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 

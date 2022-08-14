@@ -1,9 +1,11 @@
 package com.example.sosialrec;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -44,7 +46,8 @@ public class ListFragmentV2 extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_add:
                 //добавление нового элемента
-                data.addNoteData(new NoteData("Заголовок " + data.size(), "Описание " + data.size(), R.drawable.first, false));
+                data.addNoteData(new NoteData("Заметка " + data.size(), "Описание", R.drawable.first, false));
+                Toast.makeText(getContext(), "Добавлена новая заметка", Toast.LENGTH_LONG).show();
                 // нотификация добавления нового элемента
                 adapter.notifyItemInserted(data.size() - 1);
                 // прокручиваем список на элемент по индексу
@@ -56,7 +59,18 @@ public class ListFragmentV2 extends Fragment {
                 // чистка элементов
                 data.clearNoteData();
                 // нотификация изменения элементов
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged()
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Внимание!").setMessage("Вы действительно желаете очистить всю историю?")
+                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                adapter.notifyDataSetChanged();
+                                Toast.makeText(getContext(), "История очищена", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Нет", null)
+                        .show(); ;
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -144,7 +158,19 @@ public class ListFragmentV2 extends Fragment {
                 return true;
             case R.id.action_delete:
                 data.deleteNoteData(position);
-                adapter.notifyItemRemoved(position);
+                //adapter.notifyItemRemoved(position);
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Внимание!").setMessage("Вы действительно желаете удалить заметку?")
+                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                adapter.notifyItemRemoved(position);
+                                Toast.makeText(getContext(), "Заметка удалена", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Нет", null)
+                        .show();
+                //Toast.makeText(getContext(), "Заметка удалена", Toast.LENGTH_SHORT).show();
                 return true;
         }
         return super.onContextItemSelected(item);

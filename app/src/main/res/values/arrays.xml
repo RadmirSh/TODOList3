@@ -25,10 +25,10 @@
     </string-array>
     <array name="pictures">
         <item>@drawable/first</item>
-        <item>@drawable/second</item>
-        <item>@drawable/third</item>
-        <item>@drawable/fourth</item>
-        <item>@drawable/fifth</item>
+        <item>@drawable/first</item>
+        <item>@drawable/first</item>
+        <item>@drawable/first</item>
+        <item>@drawable/first</item>
 
     </array>
 

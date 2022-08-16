@@ -1,6 +1,8 @@
 package com.example.sosialrec;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,12 +23,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
+
 public class ListFragmentV2 extends Fragment {
 
     private NotesSource data;
     private ListAdapterV2 adapter;
     private RecyclerView recyclerView;
     private static final int DURATION = 1000;
+    private static final String KEY = "KEY";
+    private SharedPreferences sharedPreferences;
 
     public static ListFragmentV2 newInstance() {
         return new ListFragmentV2();
@@ -43,10 +54,12 @@ public class ListFragmentV2 extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         switch (item.getItemId()) {
             case R.id.action_add:
                 //добавление нового элемента
-                data.addNoteData(new NoteData("Заметка " + data.size(), "Описание", R.drawable.first, false));
+                data.addNoteData(new NoteData("Заметка", "Описание", R.drawable.first, false));
                 Toast.makeText(getContext(), "Добавлена новая заметка", Toast.LENGTH_LONG).show();
                 // нотификация добавления нового элемента
                 adapter.notifyItemInserted(data.size() - 1);
@@ -54,6 +67,9 @@ public class ListFragmentV2 extends Fragment {
                 recyclerView.scrollToPosition(data.size() - 1);
 
                 recyclerView.smoothScrollToPosition(data.size() - 1);
+
+                String jsonNoteDataAfterAdd = new GsonBuilder().create().toJson(data.getNoteData());
+                sharedPreferences.edit().putString(KEY, jsonNoteDataAfterAdd).apply();
                 return true;
             case R.id.action_clear:
                 // чистка элементов
@@ -70,7 +86,9 @@ public class ListFragmentV2 extends Fragment {
                             }
                         })
                         .setNegativeButton("Нет", null)
-                        .show(); ;
+                        .show();
+                String jsonNoteDataAfterClear = new GsonBuilder().create().toJson(data.getNoteData());
+                sharedPreferences.edit().putString(KEY, jsonNoteDataAfterClear).apply();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -99,7 +117,8 @@ public class ListFragmentV2 extends Fragment {
 
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycle_view_lines);
-        data = new NoteSourceImpl(getResources()).init();
+        //data = new NoteSourceImpl(getResources()).init();
+        data = new NoteSourceImpl();
         initRecyclerView();
     }
 
@@ -124,6 +143,21 @@ public class ListFragmentV2 extends Fragment {
         defaultItemAnimator.setRemoveDuration(DURATION);
         recyclerView.setItemAnimator(defaultItemAnimator);
 
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String saveData = sharedPreferences.getString(KEY, null);
+        if (saveData == null) {
+            Toast.makeText(getContext(), "Пусто", Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                Type type = new TypeToken<List<NoteData>>() {
+                }.getType();
+                adapter.setNewData(new GsonBuilder().create().fromJson(saveData, type));
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "Ошибка", Toast.LENGTH_SHORT).show();
+                ;
+            }
+        }
+
         adapter.setItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -145,6 +179,7 @@ public class ListFragmentV2 extends Fragment {
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
+        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         int position = adapter.getMenuPosition();
         switch (item.getItemId()) {
             case R.id.action_update:
@@ -155,6 +190,10 @@ public class ListFragmentV2 extends Fragment {
                         noteData.getPicture(),
                         noteData.isLike()));
                 adapter.notifyItemChanged(position);
+
+                String jsonNoteDataAfterUpdate = new GsonBuilder().create().toJson(data.getNoteData());
+                sharedPreferences.edit().putString(KEY, jsonNoteDataAfterUpdate).apply();
+
                 return true;
             case R.id.action_delete:
                 data.deleteNoteData(position);
@@ -170,6 +209,8 @@ public class ListFragmentV2 extends Fragment {
                         })
                         .setNegativeButton("Нет", null)
                         .show();
+                String jsonNoteDataAfterDelete = new GsonBuilder().create().toJson(data.getNoteData());
+                sharedPreferences.edit().putString(KEY, jsonNoteDataAfterDelete).apply();
                 //Toast.makeText(getContext(), "Заметка удалена", Toast.LENGTH_SHORT).show();
                 return true;
         }

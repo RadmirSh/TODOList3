@@ -10,14 +10,14 @@ public class NoteSourceImpl implements NotesSource {
 
 
     private List<NoteData> dataSource;
-    private Resources resources;
+   // private Resources resources;
 
-    public NoteSourceImpl(Resources resources) {
-        this.resources = resources;
+    public NoteSourceImpl(/*Resources resources*/) {
+       // this.resources = resources;
         dataSource = new ArrayList<>(5);
     }
 
-    public NoteSourceImpl init() {
+    /*public NoteSourceImpl init() {
 
         String[] titles = resources.getStringArray(R.array.titles);
         String[] descriptions = resources.getStringArray(R.array.descriptions);
@@ -29,9 +29,9 @@ public class NoteSourceImpl implements NotesSource {
 
         return this;
 
-    }
+    }*/
 
-    private int[] getImageArray() {
+    /*private int[] getImageArray() {
         TypedArray pictures = resources.obtainTypedArray(R.array.pictures);
         int length = pictures.length();
         int[] answer = new int[length];
@@ -39,13 +39,12 @@ public class NoteSourceImpl implements NotesSource {
             answer[i] = pictures.getResourceId(i, 0);
         }
         return answer;
-    }
+    }*/
 
     @Override
     public NoteData getNoteData(int position) {
         return dataSource.get(position);
     }
-
 
 
     @Override
@@ -71,5 +70,15 @@ public class NoteSourceImpl implements NotesSource {
     @Override
     public void clearNoteData() {
         dataSource.clear();
+    }
+
+    @Override
+    public void setNewData(List<NoteData> dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Override
+    public List<NoteData> getNoteData() {
+        return dataSource;
     }
 }

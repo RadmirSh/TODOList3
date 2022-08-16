@@ -3,17 +3,17 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="title1">Календарь</string>
-    <string name="title2">Лист</string>
-    <string name="title3">Суп</string>
-    <string name="title4">Утенок</string>
-    <string name="title5">Кружка</string>
+    <string name="title1">Заметка 0</string>
+    <string name="title2">Заметка 1</string>
+    <string name="title3">Заметка 2</string>
+    <string name="title4">Заметка 3</string>
+    <string name="title5">Заметка 4</string>
 
-    <string name="description1">Простой календарь</string>
-    <string name="description2">Кленовый лист</string>
-    <string name="description3">Суп кнорр</string>
-    <string name="description4">Утка-дак</string>
-    <string name="description5">Белая кружка</string>
+    <string name="description1">Описание</string>
+    <string name="description2">Описание</string>
+    <string name="description3">Описание</string>
+    <string name="description4">Описание</string>
+    <string name="description5">Описание</string>
     <string name="add">Добавить</string>
     <string name="clear">Очистить</string>
     <string name="update">Изменить</string>
